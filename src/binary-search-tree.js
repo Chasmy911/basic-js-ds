@@ -11,11 +11,11 @@ class BinarySearchTree {
   constructor() {
     this.start = null;
   }
-  
+
   root() {
     return this.start;
   }
- 
+
   add(data) {
     this.start = addWithin(this.start, data);
 
@@ -44,17 +44,67 @@ class BinarySearchTree {
     if (node === null) {
       return false;
     }
-    return node.data === data?true:false;
+    return node.data === data ? true : false;
   }
 
-  find(data) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  find(data, node = this.start) {
+    if(node === null) {
+        return null;
+    } else if(data < node.data) {
+        return this.find(data, node.left);
+    } else if(data > node.data) {
+        return this.find(data, node.right);
+    } else {
+        return node;
+    }
   }
+
 
   remove(data) {
+    this.start = this.removeNode(data, this.start);
+}
+
+removeNode(data, node = this.start) {
+    if(node === null) {
+        return null;
+    } else if(data < node.data) {
+        node.left = this.removeNode(data, node.left);
+        return node;
+   
+    } else if(data > node.data) {
+        node.right = this.removeNode(data, node.right);
+        return node;
  
+    } else {
+       
+        if(node.left === null && node.right === null) {
+            node = null;
+            return node;
+        }
+
+        if(node.left === null) {
+            node = node.right;
+            return node;
+        } else if(node.right === null) {
+            node = node.left;
+            return node;
+        }
+
+        let newNode = this.minNode(node.right);
+        node.data = newNode.data;
+        node.right = this.removeNode(newNode.data, node.right);
+        return node;
+    }
+}
+
+minNode(node = this.start) {
+  let tempNode = node;
+  while (tempNode.left != null) {
+    tempNode = tempNode.left;
   }
+  return tempNode;
+}
+
 
   min(node = this.start) {
     if (!this.start) {
